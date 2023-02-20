@@ -9,6 +9,7 @@ public class Main {
         System.out.println("""
                     Menu:
                     1. Generate password.
+                    2. Print passwords from file.
                     0. Exit.""");
     }
     public static void main(String[] args) {
@@ -21,8 +22,11 @@ public class Main {
 
             try {
                 action = Integer.parseInt(reader.readLine());
-                if (action == 0){
+                if (action == 0) {
                     break;
+                }
+                else if (action == 2) {
+                    generator.printPasswords();
                 }
                 System.out.println("Input password size(min 8):");
                 int size = Integer.parseInt(reader.readLine());

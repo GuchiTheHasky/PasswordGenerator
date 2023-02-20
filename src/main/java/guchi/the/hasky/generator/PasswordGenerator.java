@@ -1,25 +1,14 @@
 package guchi.the.hasky.generator;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PasswordGenerator {
     private final List<String> passwords = new ArrayList<>();
 
-    public boolean checkSize(int size){
+    public boolean checkSize(int size) {
         return size >= 8;
-    }
-
-    private void writeInFile(ByteArrayOutputStream stream) throws IOException {
-        passwords.add(stream.toString());
-        FileWriter writer = new FileWriter("output.txt");
-        for(String password : passwords) {
-            writer.write("Password: " + password + "\n");
-        }
-        writer.close();
     }
 
     public ByteArrayOutputStream getPassword(int length) throws IOException {
@@ -47,9 +36,32 @@ public class PasswordGenerator {
         return stream;
     }
 
+    public void printPasswords() throws IOException {
+        try (FileReader reader = new FileReader("output.txt")) {
+            int ch;
+            while ((ch = reader.read()) != -1) {
+                System.out.print((char) ch);
+            }
+        } catch (IOException ex) {
+
+            System.out.println(ex.getMessage());
+        }
+
+    }
+
     private static void generateChar(ByteArrayOutputStream is, Basket[] baskets, int index) {
         Basket basket = baskets[index];
         is.write((char) basket.getRnd());
+    }
+
+    private void writeInFile(ByteArrayOutputStream stream) throws IOException {
+        passwords.add(stream.toString());
+        FileWriter writer = new FileWriter("output.txt");
+        for (String password : passwords) {
+            writer.write("Password: " + password + "\n");
+            writer.flush();
+        }
+        writer.close();
     }
 
     private static class Basket {
@@ -60,6 +72,7 @@ public class PasswordGenerator {
             this.begin = begin;
             this.quantity = end - begin + 1;
         }
+
         public int getRnd() {
             return ((int) (Math.random() * quantity) + begin);
         }
